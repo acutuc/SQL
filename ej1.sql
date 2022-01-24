@@ -1,14 +1,6 @@
-create database ej1;
-use ej1;
-
-/*
-ESQUEMA RELACIONAL:
-centros (pk(numce), nomce, dirce)
-deptos(pk(numce*, numde), presupuesto, [deptodepen, centrodepen]*)
-empleados(pk(numem), extelefon, fecnacim, fecingreso, salario, comision, numhijos, nombemp, [numce, numde]*)
-dirigir(pk(numem*, [numce, numde]*, fecinidir), fecfindir)
-*/
-
+CREATE DATABASE if not exists EJER_4_1;
+USE EJER_4_1;
+/* CREAMOS LAS TABLAS ==> EL ORDEN ES IMPORTANTE (INTEGRIDAD REFERENCIAL) */
 create table if not exists centros
     (numce int,
      nomce varchar(60) not null,
@@ -56,9 +48,8 @@ create table if not exists dirigir
         references deptos (numde, numce) on delete no action on update cascade
     );
 
-/*  DESPUES DE EJECUTAR DESCUBRIMOS QUE NOS FALTA REPRESENTAR
+/* DESPUES DE EJECUTAR DESCUBRIMOS QUE NOS FALTA REPRESENTAR
     LA RELACIÓN DEP (deptos a deptos) */
-
     ALTER TABLE deptos
         add column deptodepen int,
         add column centrodepen int,

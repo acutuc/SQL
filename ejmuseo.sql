@@ -148,7 +148,7 @@ create table vigilar
 /* inserción de datos ==> pendiente hasta unidad 4*/
 
 alter table seguridad
-	drop foreign key fk_seguridad_sala,
+	drop foreign key fk_seguridad_salas,
 	drop column codsala;
 
 /* APARTADO B ==> CAMBIAR EL NOMBRE DE UNA CLAVE 
