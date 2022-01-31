@@ -1,6 +1,6 @@
 create database
 create table
-create trigger
+create trigger -- esto se ve más adelante. OJO
 alter
 drop
 
