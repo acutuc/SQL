@@ -56,3 +56,27 @@ create table if not exists dirigir
         add constraint fk_deptos_deptos foreign key (deptodepen, centrodepen)
             references deptos (numde, numce)
                 on delete no action on update cascade;
+                
+                
+                
+/*Ej1. TEMA 5:*/
+insert into centros
+(numce, nomce, dirce)
+values
+(10, 'SEDE CENTRAL', 'C.ALCALA, 820, MADRID'),
+(20, 'RELACION CON CLIENTES', 'C.ATOCHA, 405, MADRID');
+
+insert into deptos
+(numde, numce, presude, deptodepen, centrodepen)
+values
+(100, 10, 129000, null,'DIRECCION GENERAL'),
+(110, 20, 100000, 100, 'DIRECC. COMERCIAL'),
+(111, 20, 90000, 110, 'SECTOR INDUSTRIAL'),
+(112, 20, 175000, 110, 'SECTOR SERVICIOS'),
+(120, 10, 50000, 100, 'ORGANIZACION'),
+(121, 10, 74000, 120, 'PERSONAL'),
+(122, 10, 68000, 120, 'PROCESO DE DATOS'),
+(130, 10, 85000, 100, 'FINANZAS');
+
+insert into empleados
+(
