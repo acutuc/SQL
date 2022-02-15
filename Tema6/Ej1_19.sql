@@ -161,22 +161,85 @@ end $$
 delimiter ;
 
 /*13. Prepara un procedimiento almacenado que ejecute la consulta del apartado 3 y otro para la del apartado 4 de forma que nos sirva para averiguar el nombre de aquellos que tengan el número de hijos que deseemos en cada caso.*/
-create procedure miau
+delimiter $$
+create procedure nombreComletoEmpleadoConMasDeUnHijo
 	(in hijosmin int)
 begin
-/*14. Prepara un procedimiento almacenado que, dado el nombre de un centro de trabajo, nos devuelva su dirección.*/
+	select CONCAT_WS(' ', nomem, ape1em, ape2em) as nombre_completo,
+			CONCAT(ape1em, ifnull(concat(' ', ape2em), ''), ', ', nomem) as nombre_completo2,
+            numhiem as 'Num hijos'
+            from empleados
+            where numhiem > hijosmin;
+end $$
+delimiter ;
 
+delimiter $$
+create procedure nombreCompletoEmpleadoEmpleadosEntreUnoYTresHijos
+	(in hijosmin int, in hijosmax int)
+begin
+	select CONCAT_WS(' ', nomem, ape1em, ape2em) as nombre_completo,
+			CONCAT(ape1em, ifnull(concat(' ', ape2em), ''), ', ', nomem) as nombre_completo2,
+            numhiem as 'Num hijos'
+            from empleados
+            where numhiem between hijosmin and hijosmax;
+end $$
+delimiter ;
+/*14. Prepara un procedimiento almacenado que, dado el nombre de un centro de trabajo, nos devuelva su dirección.*/
+delimiter $$
+create procedure dirCentroTrabajo
+	(in centro varchar(60), out direccion varchar(60))
+begin
+	select dirce into direccion
+    from centros
+    where lower(trim(nomce)) = lower(trim(centro));
+end $$
+delimiter ;
 /*15. Prepara un procedimiento almacenado que ejecute la consulta del apartado 7 de forma que nos sirva para averiguar, dada una cantidad,
 el nombre de los departamentos que tienen un presupuesto superior a dicha cantidad.*/
-
+delimiter $$ 
+create procedure departamentosConMasPresupuestoQue
+	(in cantidad decimal(10,2))
+begin
+	select nomde as 'NOMBRE DEPARTAMENTOS', presude as 'PRESUPUESTO'
+    from departamentos
+    where presude > cantidad;
+end $$
+delimiter ;
 /*16. Prepara un procedimiento almacenado que ejecute la consulta del apartado 8 de forma que nos sirva para averiguar, dada una cantidad,
 el nombre de los departamentos que tienen un presupuesto igual o superior a dicha cantidad.*/
-
+delimiter $$
+create procedure departamentosConMayorOIgualPresupuestoQue
+	(in cantidad decimal(10,2), cantmax decimal(10,2))
+begin
+	select nomde as 'NOMBRE DEPARTAMENTOS', presude as 'PRESUPUESTO'
+    from departamentos
+    where presude between cantmin and cantmax;
+end $$
+delimiter ;
 /*17. Prepara un procedimiento almacenado que ejecute la consulta del apartado 9 de forma que nos sirva para averiguar, dada una fecha,
 el nombre completo y en una sola columna de los empleados que llevan trabajando con nosotros desde esa fecha.*/
 
 /*18. Prepara un procedimiento almacenado que ejecute la consulta del apartado 10 de forma que nos sirva para averiguar, dadas dos fechas,
 el nombre completo y en una sola columna de los empleados que comenzaron a trabajar con nosotros en el periodo de tiempo comprendido entre esas dos fechas.*/
-
+delimiter $$
+create procedure fechaComienzoTrabajoEmpleadoEnPeriodo
+	(in fecha1 date, in fecha2 date)
+begin
+	select CONCAT(nomem, ' ', ape1em, ' ', ifnull(ape2em, '')) as nombre, fecinem
+    from empleados
+    where fecinem between fecha1 and fecha2
+    order by fecinem ;
+end $$
+delimiter ;
 /*19. Prepara un procedimiento almacenado que ejecute la consulta del apartado 10 de forma que nos sirva para averiguar, dadas dos fechas,
 el nombre completo y en una sola columna de los empleados que comenzaron a trabajar con nosotros fuera del periodo de tiempo comprendido entre esas dos fechas.*/
+delimiter $$
+create procedure fechaComiendoTrabajoEmpleadoFueraPeriodo
+	(in fecha1 date, in fecha2 date)
+begin
+	select CONCAT(nomem, ' ', ape1em, ' ', ifnull(ape2em, '')) as nombre, fecinem
+    from empleados
+    where fecinem not between fecha1 and fecha2
+    order by fecinem ;
+end $$
+delimiter ;
