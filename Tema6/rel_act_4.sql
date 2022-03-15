@@ -6,8 +6,8 @@ create procedure ej_20()
 BEGIN
 	select avg(empleados.comisem) as 'Salario medio'
     from empleados
-    where empleados.comisem is null or empleados.comisem = 0 or empleados.comisem
-    group by empleados.comisem
+    where empleados.comisem is null or empleados.comisem = 0
+    group by empleados.comisem;
 END $$
 delimiter ;
 
