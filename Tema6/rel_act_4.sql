@@ -66,48 +66,115 @@ delimiter ;
 call ej_5;
 
 /*6. Hallar por orden de número de empleado, el nombre y salario total (salario más comisión) de los empleados cuyo salario total supere las 300.000 u.m. mensuales.*/
-drop procedure if exists ;
+drop procedure if exists ej_6;
 delimiter $$ 
-create procedure
+create procedure ej_6()
 BEGIN
-	SELECT
-    FROM
-    WHERE
+	SELECT empleados.numem as 'NumEmpleado', concat(empleados.nomem, ' ', empleados.ape1em, ' ', ifnull(empleados.ape2em, ' ')) as 'NombreEmpleado', (empleados.salarem + empleados.comisem) as 'Salario'
+    FROM empleados
+    WHERE empleados.salarem+empleados.comisem > 300000
+    ORDER BY empleados.numem desc;
 END $$
 delimiter ;
-call ;
+call ej_6;
 
 /*7. Obtener los números de los departamentos en los que haya algún empleado cuya comisión supere al 20% de su salario.*/
-drop procedure if exists ;
+drop procedure if exists ej_7;
 delimiter $$ 
-create procedure
+create procedure ej_7()
 BEGIN
-	SELECT
-    FROM
-    WHERE
+	SELECT empleados.numde as 'Departamento'
+    FROM empleados
+    WHERE empleados.comisem > empleados.salarem * 0.20
+    GROUP BY empleados.numde;
 END $$
 delimiter ;
-call ;
+call ej_7;
 
 /*8. Hallar por orden alfabético los nombres de los empleados tales que si se les da una gratificación de 100 u.m.
 por hijo el total de esta gratificación no supere a la décima parte del salario.*/
+drop procedure if exists ej_8;
+delimiter $$ 
+create procedure ej_8()
+BEGIN
+	SELECT empleados.nomem as 'NombreEmpleado'
+    FROM empleados
+    WHERE 100 * empleados.numhiem <= empleados.salarem/10
+    ORDER BY empleados.nomem asc;
+END $$
+delimiter ;
+call ej_8;
 
 /*9. Llamaremos presupuesto medio mensual de un depto. al resultado de dividir su presupuesto anual por 12. 
 Supongamos que se decide aumentar los presupuestos medios de todos los deptos en un 10% a partir del mes de octubre inclusive.
 Para los deptos. cuyo presupuesto mensual anterior a octubre es de más de 500.000 u.m.
 Hallar por orden alfabético el nombre de departamento y su presupuesto anual total después del incremento.*/
+drop procedure if exists ej_9;
+delimiter $$
+create procedure ej_9()
+BEGIN
+	SELECT departamentos.nomde as 'Departamento', (departamentos.presude/12)*(9 + 1.1 * 3) as 'PresupuestoIncrementado'
+    FROM departamentos
+    WHERE (departamentos.presude / 12) * 9 = 500000
+    ORDER BY departamentos.presude;
+END $$
+delimiter ;
+call ej_9;
 
 /*10. Suponiendo que en los próximos tres años el coste de vida va a aumentar un 6% anual y que se suben los salarios en la misma proporción.
 Hallar para los empleados con más de cuatro hijos, su nombre y sueldo anual, actual y para cada uno de los próximos tres años,
 clasificados por orden alfabético*/
+drop procedure if exists ej_10;
+delimiter $$
+create procedure ej_10()
+BEGIN
+	SELECT concat(empleados.nomem, ' ', empleados.ape1em, ' ', ifnull(empleados.ape2em, ' ')) as 'NombreEmpleado', empleados.salarem*12 as 'SalarioAnualActual', (empleados.salarem*12)*1.06 as 'SalarioAnualEn1año', (empleados.salarem*12)*1.12 as 'SalarioAnualEn2años', (empleados.salarem*12)*1.18 as 'SalarioAnualEn3Años'
+    FROM empleados
+    WHERE empleados.numhiem > 4
+    ORDER BY empleados.nomem;
+END $$
+delimiter ;
+call ej_10;
 
 /*11. Hallar por orden de número de empleado, el nombre y salario total (salario más comisión) de los empleados cuyo salario total supera al salario mínimo en 300.000 u.m. mensuales. */
+drop procedure if exists ej_11;
+delimiter $$
+create procedure ej_11()
+BEGIN
+	SELECT empleados.nomem, concat(empleados.nomem, ' ', empleados.ape1em ' ', ifnull(empleados.ape2em, ' ')) as 'NombreEmpleado', (empleados.salarem + empleados.comisem) as 'SalarioTotal'
+    FROM empleados
+    WHERE empleados.salarem + empleados.comisem > min(empleados.salarem
+    ORDER BY empleados.nomem;
+END $$
+delimiter ;
+call ej_11;
 
 /*12. Se desea hacer un regalo de un 1% del salario a los empleados en el día de su onomástica.
 Hallar por orden alfabético, los nombres y cuantía de los regalos en u.m. para los que celebren su santo el día de San Honorio*/
+drop procedure if exists ej_12;
+delimiter $$
+create procedure ej_12()
+BEGIN
+	SELECT empleados.nomem as 'NombreEmpleado', empleados.salarem*1.01 as 'SalarioConBonus'
+	FROM empleados
+   	WHERE empleados.nomem = 'Honorio'
+    ORDER BY empleados.nomem;
+END $$
+delimiter ;
+call ej_12();
 
 /*13. Obtener por orden alfabético los nombres y los salarios de los empleados del depto. 111 que tienen comisión,
 si hay alguno de ellos cuya comisión supere al 15% de su salario.*/
+drop procedure if exists ej_13;
+delimiter $$
+create procedure ej_13()
+BEGIN
+	SELECT 
+	FROM 
+   	WHERE 
+END $$
+delimiter ;
+call ej_13();
 
 /*14. En la fiesta de Reyes se desea organizar un espectáculo para los hijos de los empleados, que se representará en dos días diferentes.
 El primer día asistirán los empleados cuyo apellido empiece por las letras desde la “A” hasta la “L”, ambas inclusive.
@@ -155,3 +222,13 @@ Hallar por orden alfabético, los nombres de estos empleados y la gratificación
 /*27. Disminuir en la tabla EMPLEADOS un 5% el salario de los empleados que superan el 50% del salario máximo de su departamento.*/
 
 /*28. Crear una vista en la que aparezcan todos los datos de los empleados que cumplen 65 años de edad este año.*/
+drop procedure if exists ej_28;
+delimiter $$
+create procedure ej_28()
+BEGIN
+	SELECT empleados.*
+	FROM empleados
+   	WHERE (year(curdate()) - year(empleados.fecnaem)) = 65;
+END $$
+delimiter ;
+call ej_28();
