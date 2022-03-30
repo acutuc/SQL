@@ -19,9 +19,14 @@ drop procedure if exists ej3_7;
 delimiter $$
 create procedure ej3_7(in codigoPromocion varchar(60))
 BEGIN
-	SELECT
-    FROM
-
+	SELECT nomcat
+	FROM categorias JOIN articulos 
+		ON categorias.codcat = articulos.codcat
+		JOIN catalogospromos 
+			ON articulos.refart = catalogospromos.refart
+	WHERE catalogospromos.codpromo = 1
+	GROUP BY nomcat
+	HAVING count(*) > 1;
 END $$
 delimiter ;
 
@@ -31,9 +36,11 @@ drop procedure if exists ej4_7;
 delimiter $$
 create procedure ej4_7()
 BEGIN
-	SELECT
-    FROM
-
+	SELECT nomcat, avg(precioventa)
+	FROM categorias JOIN articulos 
+		ON categorias.codcat = articulos.codcat
+	GROUP BY nomcat
+	HAVING avg(precioventa) > 3;
 END $$
 delimiter ;
     

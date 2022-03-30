@@ -169,9 +169,10 @@ drop procedure if exists ej_13;
 delimiter $$
 create procedure ej_13()
 BEGIN
-	SELECT 
-	FROM 
-   	WHERE 
+	SELECT nomem, salarem
+	FROM empleados
+    WHERE numde = 111 and ifnull(comisem,0) > salarem*0.15
+	ORDER BY numem;
 END $$
 delimiter ;
 call ej_13();
@@ -182,17 +183,104 @@ El segundo día se darán invitaciones para el resto. A cada empleado se le asig
 Además en la fiesta se entregará a cada empleado un obsequio por hijo.
 Obtener una lista por orden alfabético de los nombres a quienes hay que invitar el primer día de la representación,
 incluyendo también cuantas invitaciones corresponden a cada nombre y cuantos regalos hay que preparar para él. */
+drop procedure if exists ej_14;
+delimiter $$
+create procedure ej_14()
+BEGIN
+
+DROP VIEW if exists FIESTA;
+CREATE VIEW FIESTA
+AS 
+
+	-- DIA 1
+	SELECT 'DIA 1' as 'Día Fiesta', concat_ws(' ', ape1em, ape2em) as Apellidos, nomem as 'Nombre', 
+		(numhiem +2) as 'Invitaciones', numhiem as 'Regalos'
+	FROM empleados
+    WHERE -- ifnull(numhiem, 0) > 0
+		-- and substring(ape1em, 1, 1) < 'M'
+        ape1em LIKE ('M%');
+	
+    
+UNION
+
+    -- DIA 2
+    SELECT 'DIA 2' as 'Día Fiesta', concat_ws(' ', ape1em, ape2em) as Apellidos, nomem as 'Nombre', 
+		(numhiem +2) as 'Invitaciones', numhiem as 'Regalos'
+	FROM empleados
+    WHERE ifnull(numhiem, 0) > 0
+		and substring(ape1em, 1, 1) >= 'M';
+    
+   SELECT *
+	FROM FIESTA
+	ORDER BY 'Día Fiesta', Apellidos;
+    
+END $$
+
+delimiter ;
+call ej_14;
 
 /*15. Hallar los nombres de los empleados que no tienen comisión,
 clasificados de manera que aparezcan primero aquellos cuyos nombres son más cortos.*/
+drop procedure if exists ej_15;
+delimiter $$
+create procedure ej_15()
+BEGIN
+	SELECT nomem, comisem
+	FROM empleados
+    WHERE comisem is null or comisem = 0
+	ORDER BY length(nomem) asc;
+END $$
+delimiter ;
+call ej_15;
 
 /*16. Hallar cuántos departamentos hay y el presupuesto anual medio de ellos.*/
+drop procedure if exists ej_16;
+delimiter $$
+create procedure ej_16()
+BEGIN
+	SELECT count(numde) as 'Num Deptos', avg(presude) as 'Presupuesto medio'
+	FROM departamentos;
+END $$
+delimiter ;
+call ej_16;
 
 /*17. Hallar el salario medio de los empleados cuyo salario no supera en más de un 20% al salario mínimo de los empleados que tienen algún hijo y su salario medio por hijo es mayor que 100.000 u.m.*/
+drop procedure if exists ej_17;
+delimiter $$
+create procedure ej_17()
+BEGIN
+	SELECT avg(salarem) as 'Sal. medio'
+	FROM empleados
+    WHERE salarem < ((select min(salarem) 
+						from empleados 
+						where numhiem > 0 and salarem*12/numhiem) * 1.2);
+END $$
+delimiter ;
+call ej_17;
 
 /*18. Hallar la diferencia entre el salario más alto y el más bajo */
+drop procedure if exists ej_18;
+delimiter $$
+create procedure ej_18()
+BEGIN
+	SELECT (max(salarem)-min(salarem)) as 'Diferencia'
+	FROM empleados;
+END $$
+delimiter ;
+call ej_18;
 
 /*19. Hallar el número medio de hijos por empleado para todos los empleados que no tienen más de dos hijos*/
+drop procedure if exists ej_19;
+delimiter $$
+create procedure ej_19()
+BEGIN
+	SELECT avg(numhiem)
+	FROM empleados
+    WHERE numhiem <= 2;
+END $$
+delimiter ;
+call ej_19;
+
 
 /*20. Hallar el salario medio para cada grupo de empleados con igual comisión y para los que no la tengan (Javi/Gabriel).*/
 drop procedure if exists ej_20;
@@ -207,10 +295,42 @@ delimiter ;
 call ej_20;
 
 /*21. Para cada extensión telefónica, hallar cuantos empleados la usan y el salario medio de éstos.*/
+drop procedure if exists ej_21;
+delimiter $$
+create procedure ej_21()
+BEGIN
+	SELECT extelem, count(numem), avg(salarem)
+	FROM empleados
+    GROUP BY extelem
+    ORDER BY extelem;
+END $$
+delimiter ;
+call ej_21;
 
 /*22. Para los departamentos cuyo salario medio supera al de la empresa, hallar cuantas extensiones telefónicas tienen.*/
+drop procedure if exists ej_22;
+delimiter $$
+create procedure ej_22()
+BEGIN
+	SELECT departamentos.numde, count(distinct empleados.extelem)
+	FROM departamentos join empleados on empleados.numde = departamentos.numde                          
+	GROUP BY empleados.numde
+    HAVING avg(empleados.salarem) > (select avg(empleados.salarem) from empleados);
+END $$
+delimiter ;
+call ej_22;
 
 /*23. Hallar el máximo valor de la suma de los salarios de los departamentos.*/
+drop procedure if exists ej_23;
+delimiter $$
+create procedure ej_23()
+BEGIN
+	SELECT
+	FROM
+    WHERE
+END $$
+delimiter ;
+call ej_23;
 
 /*24. Hallar por orden alfabético, los nombres de los empleados que son directores en funciones.*/
 
