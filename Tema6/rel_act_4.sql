@@ -27,7 +27,7 @@ delimiter ;
 call ej_2;
 
 /*3. Hallar por orden alfabético los nombres de los deptos cuyo director lo es en funciones y no en propiedad.*/
-drop procedure if exists ;
+drop procedure if exists ej_3();
 delimiter $$ 
 create procedure ej_3()
 BEGIN
@@ -323,7 +323,7 @@ call ej_22;
 /*23. Hallar el máximo valor de la suma de los salarios de los departamentos.*/
 drop procedure if exists ej_23;
 delimiter $$
-create procedure ej_23()
+create procedure ej_23() 
 BEGIN
 	SELECT
 	FROM
