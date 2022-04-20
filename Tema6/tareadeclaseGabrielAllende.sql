@@ -12,26 +12,24 @@ PISTAS:
 * Tendrás que usar funciones de fecha para saber si hoy (curdate()) está incluido dentro del periodo de una promoción en la tabla promociones (fecinipromo y fecinipromo+duración).
 * Tendrás que usar la UNION ya que necesitas unir los datos de los artículos promocionados a los datos de los artículos no promocionados.
 * Puede que te sea útil algún operador que trabaja con conjuntos de resultados como some, any, all o in.*/
+use ventapromoscompleta
 
 CREATE VIEW ejClase (Productos, Precio) as 
 	SELECT articulos.refart, articulos.precioventa
     FROM articulos
     WHERE articulos.refart not in (SELECT catalogospromos.refart
 									FROM catalogospromos JOIN promociones ON catalogospromos.codpromo = promociones.codpromo
-									WHERE curdate() between promociones.fecinipromo and date_add(promociones.fecinipromo, INTERVAL promociones.duracionpromo DAY))
+									WHERE curdate() between promociones.fecinipromo and promociones.fecinipromo+promociones.duracionpromo)
     
     UNION
     
     SELECT catalogospromos.refart, catalogospromos.precioartpromo
     FROM catalogospromos JOIN promociones ON catalogospromos.codpromo = promociones.codpromo
-    WHERE curdate() between promociones.fecinipromo and date_add(promociones.fecinipromo, INTERVAL promociones.duracionpromo DAY);
+    WHERE curdate() between promociones.fecinipromo and promociones.fecinipromo+promociones.duracionpromo;
     
-   
 
-select * from catalogospromos
-select * from articulos
-select * from promociones
 SELECT *
 FROM ejClase
 
-DROP VIEW ejClase
+
+drop view ejClase
