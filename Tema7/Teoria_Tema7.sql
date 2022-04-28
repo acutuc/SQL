@@ -92,27 +92,32 @@ Al finalizar de trabajar con el cursor tendremos que cerrarlo:
 		CLOSE nom_cursor;
 Los cursores se recorren dentro de bucles (REPEAT o WHILE).
 Cuando llegamos al final de un cursor e intentamos posicionarnos en la siguiente fila, se produce un WARNING (SQLSTATE 02000), así que utilizaremos un manejador de error para este código y poder salir del bucle.*/
-delimiter $$
+/*
+
+*/
+DROP TABLE IF EXISTS listado;
 drop procedure if exists pruebaCursor;
-create procedure pruebaCursor()
-BEGIN
-	DECLARE curDeptos CURSOR FOR
-		SELECT numde, nomde, presude, nomce
-		FROM departamentos JOIN centros on departamentos.numce = centros.numce
-        ORDER BY nomce;
-        
+delimiter $$
+CREATE PROCEDURE pruebaCursor()
+BEGIN        
 	DECLARE numDepto int DEFAULT 0;
     DECLARE nomDepto, nomCentro, nomCentroAux varchar(100) DEFAULT ''; -- nomCentroAux es la variable auxiliar.
     DECLARE presuDepto decimal(12,2) DEFAULT 0.00;
+    DECLARE presupFinal decimal(12,2) DEFAULT 0.00;
     
     DECLARE fin_cursor BOOLEAN DEFAULT 0;
+    
+    DECLARE curDeptos CURSOR FOR
+		SELECT numde, nomde, presude, nomce
+		FROM departamentos JOIN centros on departamentos.numce = centros.numce
+        ORDER BY nomce;
     
     DECLARE CONTINUE HANDLER FOR SQLSTATE '02000'
 		-- BEGIN
 			SET fin_cursor = 1;
         -- END
-		create temporary table listado	-- creamos una tabla temporal
-        (filalistado varchar(500);
+		CREATE TEMPORARY TABLE listado	-- creamos una tabla temporal
+        (filalistado varchar(500));
 	OPEN curDeptos;
 		FETCH curDeptos INTO numDepto, nomDepto, presuDepto, nomCentro;
         WHILE fin_cursor = 0 DO
@@ -121,22 +126,19 @@ BEGIN
                 BEGIN
 					INSERT INTO listado
 					VALUES
-					(concat('centro de trabajo: ', nomCentro));
-					INSERT INTO listado
-					VALUES
+					(concat('centro de trabajo: ', nomCentro)),
 					('num.depto		nombre		presupuesto');
-					INSERT INTO listado
-					VALUES
-					(concat(numDepto, '		', nomDepto, ' 		', presuDepto);
 					SET nomCentroAux = nomcentro;
                 END;
+				END IF;
+                INSERT INTO listado
+					VALUES
+					(concat(numDepto, '			', nomDepto, ' 			', presuDepto));
 					/*aquí va todo el código que quiera hacer con éstos campos
-					...
+					... 
 					...*/
-            END;
-            END WHILE;
-        FETCH curDeptos INTO numDepto, nomDepto, presuDepto, nomCentro;
-        END;
+				FETCH curDeptos INTO numDepto, nomDepto, presuDepto, nomCentro;
+			END;
         END WHILE;
 	CLOSE curDeptos;
     SELECT *
@@ -144,3 +146,4 @@ BEGIN
     DROP TABLE listado; -- eliminamos la tabla.
 END $$
 delimiter ;
+CALL pruebaCursor();
