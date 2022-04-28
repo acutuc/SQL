@@ -103,7 +103,6 @@ BEGIN
 	DECLARE numDepto int DEFAULT 0;
     DECLARE nomDepto, nomCentro, nomCentroAux varchar(100) DEFAULT ''; -- nomCentroAux es la variable auxiliar.
     DECLARE presuDepto decimal(12,2) DEFAULT 0.00;
-    DECLARE presupFinal decimal(12,2) DEFAULT 0.00;
     
     DECLARE fin_cursor BOOLEAN DEFAULT 0;
     
