@@ -156,7 +156,7 @@ BEGIN
 					INSERT INTO listado -- Cabecera de cada centro
 					VALUES 						 
 						(concat('Centro de trabajo: ', nomcentro)),
-						('Nº Departamento	Nombre				Presupesto');
+						('Nº Departamento		Nombre				Presupesto');
 					
 					SET nomcentroaux = nomcentro;
                     SET primera_fila = 0; -- Primera fila a false
