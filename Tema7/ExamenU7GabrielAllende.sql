@@ -103,4 +103,4 @@ begin
 end $$
 delimiter ;
 
-CALL examenU7 (1);
+CALL examenU7 ('1ESO');
