@@ -1,6 +1,6 @@
 -- Teoría Tema 8.
 
--- DISPARADORES (TRIGGERS)
+-- TRIGGERS
 Es un procedimiento almacenado que se lanza automáticamente cuando sucede algo.
 Las instrucciones para las que se puede preparar un disparador son aquellas que modifican datos,
 por tanto serán UPDATE, INSERT o DELETE. El disparador quedará asociado a una de estas
