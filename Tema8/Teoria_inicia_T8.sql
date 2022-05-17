@@ -37,3 +37,32 @@ do
 		 call domiciliaciones();
     end $$
 delimiter ;
+
+
+-- INDICES
+use empresaclase;
+CREATE UNIQUE INDEX dniempleado -- nombre del índice. El tipo de índice es opcional.
+	ON empleados (dniem); -- tabla y campo O campos sobre los que actuará el índice.
+-- --------------------------------------------------------------------
+CREATE INDEX buscanombre
+	ON empleados (ape1em(4), ape2em(4), nomem(3)); -- El número del paréntesis indica la cantidad de caracteres (desde el principio) que nos devuelve el índice.
+
+SHOW INDEX FROM empleados; -- ver los índices
+
+EXPLAIN SELECT nomem -- EXPLAIN nos da información general de la tabla.
+FROM empleados USE INDEX (buscanombre)
+WHERE ape1em LIKE '%tort%' AND ape2em LIKE '%per%'
+ORDER BY ape1em;
+
+EXPLAIN SELECT *
+FROM empleados
+WHERE dniem = '27000001q';
+
+
+-- TRANSACCIONES
+START TRANSACTION;
+INSERT INTO centros
+(numce, nomce, dirce)
+VALUES
+(100, 'Prueba Transacción', 'Dirección prueba transacción');
+ 
