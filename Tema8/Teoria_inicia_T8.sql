@@ -15,7 +15,7 @@ ON nombre_tabla -- tabla con la que está asociada el disparador.
 FOR EACH ROW
 begin
 	-- ej
-    if date_add(fecnacim, interval 16 year) > curdate() then
+    if date_add(new.fecnacim, interval 16 year) > curdate() then
     -- no contratar (no hacer el insert)
     SIGNAL SQLSTATE '45000'
 		SET MESSAGE_TEXT = 'El empleado no tiene la edad apropiada';
