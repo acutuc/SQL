@@ -65,4 +65,4 @@ INSERT INTO centros
 (numce, nomce, dirce)
 VALUES
 (100, 'Prueba Transacción', 'Dirección prueba transacción');
- 
+COMMIT;
